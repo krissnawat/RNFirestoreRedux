@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, Keyboard, Text, TextInput, TouchableOpacity, View, Button } from 'react-native'
 import styles from './styles';
 import firestore from '@react-native-firebase/firestore'
 
+import auth from '@react-native-firebase/auth'
 export default (props) => {
 
     const [entityText, setEntityText] = useState('')
@@ -50,7 +51,19 @@ export default (props) => {
                 });
         }
     }
-
+    React.useLayoutEffect(() => {
+        props.navigation.setOptions({
+            headerRight: () => (
+                <Button onPress={() => signOut(props)} title="sign out" />
+            ),
+        });
+    }, [props.navigation]);
+    signOut = (props) => {
+        auth()
+            .signOut()
+            .then(() => alert('User signed out!'));
+        return props.navigation.navigate('Login')
+    }
     const renderEntity = ({ item, index }) => {
         return (
             <View style={styles.entityContainer}>
